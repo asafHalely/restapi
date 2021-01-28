@@ -11,11 +11,3 @@ def test_get_employee():
 def test_get_non_existing_employee():
     res = requests.get("http://localhost:5000/employees/666")
     assert res.status_code == 200
-
-
-
-
-
-
-
-

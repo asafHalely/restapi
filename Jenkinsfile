@@ -1,15 +1,23 @@
 pipeline {
-    agent any
+    agent {
+        node { 
+            label 'linux'
+            customWorkspace 'workspace/iast/'
+        }
+    }
 
     stages {
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
+                script {
+                    def app = docker.build 'app'
+                    app.withRun {c ->
+                        sh '''
+                            pip3 install -U pytest
+                            pytest
+                        '''
+                    }
+                }
             }
         }
         stage('Deploy') {
